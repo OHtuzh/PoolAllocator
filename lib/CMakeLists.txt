@@ -1,0 +1,11 @@
+add_library(
+        pool_allocator
+        INTERFACE
+        Info.hpp
+        Bucket.hpp
+        FunctionsOverBucket.hpp
+        BucketConfigs.hpp
+        BucketDescriptors.hpp
+        SecretPoolAllocator.hpp
+        PoolAllocator.hpp
+)
