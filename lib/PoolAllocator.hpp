@@ -45,16 +45,10 @@ public:
     PoolAllocator& operator=(PoolAllocator&& other) noexcept;
 
     template<typename U>
-    PoolAllocator& operator=(const PoolAllocator<U, id>& other) {
-        memory_resource_ = other.memory_resource_;
-        *this = static_cast<const SecretPoolAllocator<id>&>(other);
-    }
+    PoolAllocator& operator=(const PoolAllocator<U, id>& other);
 
     template<typename U>
-    PoolAllocator& operator=(PoolAllocator<U, id>&& other) noexcept {
-        memory_resource_ = other.memory_resource_;
-        *this = std::move(static_cast<const SecretPoolAllocator<id>&>(other));
-    }
+    PoolAllocator& operator=(PoolAllocator<U, id>&& other) noexcept;
 
     [[nodiscard]] T* allocate(std::size_t n);
 
@@ -89,6 +83,22 @@ PoolAllocator<T, id>& PoolAllocator<T, id>::operator=(PoolAllocator&& other) noe
     }
     memory_resource_ = other.memory_resource_;
     *this = std::move(static_cast<SecretPoolAllocator<id>&>(other));
+    return *this;
+}
+
+template<typename T, std::size_t id>
+template<typename U>
+PoolAllocator<T, id>& PoolAllocator<T, id>::operator=(const PoolAllocator<U, id>& other) {
+    memory_resource_ = other.memory_resource_;
+    *this = static_cast<const SecretPoolAllocator<id>&>(other);
+    return *this;
+}
+
+template<typename T, std::size_t id>
+template<typename U>
+PoolAllocator<T, id>& PoolAllocator<T, id>::operator=(PoolAllocator<U, id>&& other) noexcept {
+    memory_resource_ = other.memory_resource_;
+    *this = std::move(static_cast<const SecretPoolAllocator<id>&>(other));
     return *this;
 }
 
@@ -129,3 +139,14 @@ void PoolAllocator<T, id>::deallocate(T* p, std::size_t n) {
         }
     }
 }
+
+template<typename T, std::size_t id>
+bool PoolAllocator<T, id>::operator==(const PoolAllocator& other) {
+    return this->pool_.get() == other.pool_.get();
+}
+
+template<typename T, std::size_t id>
+bool PoolAllocator<T, id>::operator!=(const PoolAllocator& other) {
+    return !this->operator==(other);
+}
+

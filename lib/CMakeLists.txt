@@ -3,7 +3,6 @@ add_library(
         INTERFACE
         Info.hpp
         Bucket.hpp
-        FunctionsOverBucket.hpp
         BucketConfigs.hpp
         BucketDescriptors.hpp
         SecretPoolAllocator.hpp
